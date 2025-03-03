@@ -1,0 +1,84 @@
+Modifying c4.c to Support do-while loops
+
+Modifications:
+
+1. Define a New Token in the Token Enum
+
+Located around line 33, after While, we introduce Do:
+
+enum {
+  Num = 128, Fun, Sys, Glo, Loc, Id,
+  Char, Else, Enum, If, Int, Return, Sizeof, While, Do, // NEW: 'Do' Token
+  Assign, Cond, Lor, Lan, Or, Xor, And, Eq, Ne, Lt, Gt, Le, Ge, Shl, Shr, Add, Sub, Mul, Div, Mod, Inc, Dec, Brak
+};
+
+This ensures 'do' is recognized as a keyword in the compiler.
+
+2. Modify stmt() to Parse do-while
+
+Located around line 314, inside the statement handling, we add support for do-while:
+else if (tk == Do) { // NEW: 'do-while' loop support
+    next();
+    a = e + 1;
+    stmt();
+    if (tk != While) {
+        printf("%d: while expected after do-while loop\n", line);
+        exit(-1);
+    }
+    next();  
+    if (tk != '(') { printf("%d: open paren expected\n", line); exit(-1); }
+    next();
+    expr(Assign);
+    if (tk != ')') { printf("%d: close paren expected\n", line); exit(-1); }
+    next();
+    *++e = BNZ;
+    *++e = (int)a; 
+    if (tk != ';') { 
+        printf("%d: semicolon expected after do-while\n", line); 
+        exit(-1); 
+    }
+    next();
+  }
+
+This ensures correct parsing and handling of do-while loops.
+
+3. Add 'do' to the Keyword List
+
+Located around line 379, we update the keyword list to include do:
+
+p = "char else enum if int return sizeof while do " // NEW: 'do' keyword
+      "open read close printf malloc free memset memcmp exit void main";
+
+This ensures 'do' is properly identified as a keyword during lexical analysis.
+
+4. Add 'Do' to the Symbol Table
+
+Located around line 381, after initializing keywords, we update:
+
+i = Char; while (i <= Do) { next(); id[Tk] = i++; } // add keywords to symbol table // NEW: All keywords up to Do are added to symbol table
+
+This ensures all keywords, including do, are correctly stored in the symbol table.
+
+Effect of Changes
+
+- The do-while loop is now recognized and compiled correctly.
+
+- Syntax checking ensures correct use of while(condition); after do { ... }.
+
+- The generated code ensures correct execution, looping at least once before condition evaluation.
+
+For example, if we compile the following program with c4_modified.c:
+
+int main() {
+    int x;
+    x = 0;
+    do {
+        printf("x = %d\n", x);
+        x++;
+    } while (x < 0);
+    return 0;
+}
+
+It should correctly output:
+
+x = 0

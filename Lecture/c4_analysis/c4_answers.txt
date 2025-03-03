@@ -1,0 +1,54 @@
+Conceptual Questions on C4
+
+1. What is the purpose of the next() function, and how does it contribute to the compilation process?
+
+The c4 next() function is responsible for lexical analysis, identifying and tokenizing the source code input. It reads characters one at a time and performs this sequentially, determining keywords, identifiers, numbers, operators, and string literals, ignoring whitespace and comments. Hashing is used to manage identifiers in the symbol table (sym) and grants tokens unique integer values via the function. It also works with operators such as ==, !=, and <= by looking at additional characters. This function is crucial because it takes raw source code and turns them into a stream of tokens, and it feeds this stream to the parser (expr(int lev) and stmt()), which turns it into executable bytecode.
+
+
+2. How does C4 handle symbol resolution (e.g., variables, functions)?
+
+C4 handles symbol resolution by maintaining a symbol table (sym) that keeps track of variables, functions, and system calls. This table receives identifiers added to it by next() during lexical analysis. The global variables are stored in the data section, while local variables use stack offsets (loc). Function names are recorded along with their memory addresses. If a function is called, c4 determines whether the function is a system call (e.g., printf) or a user-defined function. The execution flow is handled by the JSR (jump to subroutine) and LEV (leave subroutine) instructions and function arguments are managed by adjusting the stack pointer (sp).
+
+
+3. What are the limitations of C4 as a compiler? What features of C does it not support?
+
+C4 is a minimalist compiler, supporting only the essential features required for self-compilation. It lacks many C features, including:
+
+- It does not support some composite data types (structs, unions, and typedefs). 
+
+- While arrays are supported, the only way to use them is via pointers and malloc(). They cannot be declared with [] syntax. enums are also supported, but they can only be defined globally.
+
+- Variables, whether global or local, cannot be initialized at the time of declaration. If they need to be assigned values, the assignment must be done separately after declaring them.
+
+- There is no support for <stdio.h>, <string.h>, or other standard headers beyond minimal system calls.
+
+- Only integer arithmetic is available. There are no floating-point operations because float and double data types are not defined.
+
+- No C preprocessor, meaning no #define, #include, or macros.
+
+- No multi-line comments (/* ... */).
+
+- It only supports if, while, and return. There is no switch-case, for loops, or do-while loops.
+
+- It does not support break and continue statements.
+
+- In standard C, you can declare functions before defining them, but that is not the case in C4.
+
+- Minimal type checking is performed, leading to potential runtime issues. For example, C will give warnings if an integer was assigned to an integer pointer, but C4 will not produce such warnings.
+
+These limitations make c4 unsuitable for compiling general C programs but allow it to remain small and self-hosting.
+
+
+4. How does C4 achieve self-hosting (i.e., compiling itself)? What are the implications of this design?
+
+C4 achieves self-hosting by including just enough functionality to compile its own source code (c4.c). The compiler translates its own code into bytecode, which is then executed by its built-in virtual machine (VM). The process involves:
+
+1. Lexical Analysis (next()) – Tokenizing c4.c.
+
+2. Parsing (expr(), stmt()) – Converting tokens into executable instructions.
+
+3. Code Generation (e[] array) – Storing emitted bytecode.
+
+4. Execution via VM – Running the compiled code using main().
+
+This design implies that little can be changed about c4, which is highly compact, and easy to study. This, however, comes at the cost of c4 being constrained to a very small subset of C, and thus impractical for using when trying to compile modern programs outside of their own implementation.

@@ -1,0 +1,248 @@
+ C4 Code Statistics  
+ 
+
+ 1. Total Lines of Code (NLOC)
+- Total Files Analyzed: 1  
+- Total Lines of Code (NLOC) for Entire Program: 486
+- Total Statements: 908  
+
+ 2. Function Analysis
+- Total Number of Functions: 4  
+- Functions and Their Sizes (NLOC):  
+  | Function Name | Lines of Code (NLOC) | Cyclomatic Complexity |
+  |---------------|----------------------|-----------------------|
+  | `main()`      | 181                  | 100                   |
+  | `next()`      | 84                   | 85                    |
+  | `expr()`      | 147                  | 91                    |
+  | `stmt()`      | 47                   | 15                    |
+  
+- Average Statements per Function: 223.0  
+- Maximum Function Complexity: 100 (Found in `main()`)  
+- Average Cyclomatic Complexity (All Functions): 72.75
+
+ 3. Branching and Loop Analysis
+- Percentage of Branches in Code: 31.1%    
+- Maximum Block Depth: 7  
+- Average Block Depth: 2.93  
+
+ 4. Global Variables and Their Usage
+The following global variables were detected using Clang Static Analyzer:  
+
+- `char *p, *lp, *data;` (used for parsing and symbol tracking)  
+- `int *e, *le, *id, *sym;` (used for compiled code representation)  
+- `int tk, ival, ty, loc, line, src, debug;` (used for tokenization and debugging)  
+
+Usage:  
+- These variables are involved in parsing, tokenizing, and managing symbols for the compiler.  
+- Some variables could be refactored into local variables to reduce global state dependency.  
+
+ 5. Unique Tokens and Frequency
+ - Total Unique Tokens (keywords, identifiers, operators, numbers): Estimated ~200
+    354 =
+    201 ==
+    194 if
+    189 tk
+    152 e
+    151 *
+    148 else
+    121 *++
+     96 next
+     70 -
+     69 1
+     65 ty
+     65 ++
+     62 p
+     61 i
+     58 id
+     58 a
+     56 sp
+     51 printf
+     51 int
+     40 return
+     37 expr
+     36 line
+     36 PSH
+     35 +
+     33 INT
+     30 while
+     30 t
+     27 0
+     23 ||
+     23 exit
+     23 d
+     23 !=
+     22 &&
+     21 pc
+     19 Class
+     18 PTR
+     18 Inc
+     17 poolsz
+     17 ival
+     17 char
+     17 IMM
+     17 <=
+     16 Val
+     15 sizeof
+     14 >=
+     13 CHAR
+     13 Assign
+     13 >
+     11 argv
+     11 Type
+     11 Mul
+     11 LI
+     11 LC
+     10 data
+     10 !
+      8 pp
+      8 argc
+      8 SUB
+      8 Num
+      8 Int
+      8 Char
+      8 *--
+      7 bp
+      7 b
+      7 Tk
+      7 Shl
+      7 MUL
+      7 Loc
+      7 Id
+      7 ADD
+      7 <
+      7 &
+      6 stmt
+      6 malloc
+      6 le
+      6 cycle
+      6 bt
+      6 BZ
+      6 Add
+      5 sym
+      5 n
+      5 lp
+      5 SI
+      5 SC
+      5 Lt
+      5 JMP
+      5 And
+      5 ADJ
+      5 9
+      4 void
+      4 src
+      4 memset
+      4 loc
+      4 fd
+      4 enum
+      4 Xor
+      4 XOR
+      4 Sub
+      4 Or
+      4 Lan
+      4 LEV
+      4 HVal
+      4 HType
+      4 HClass
+      4 Eq
+      4 EXIT
+      4 EQ
+      4 Dec
+      4 DIV
+      4 Cond
+      4 A
+      4 2
+      4 --
+      3 |
+      3 idmain
+      3 debug
+      3 While
+      3 Sys
+      3 Shr
+      3 SHR
+      3 SHL
+      3 OR
+      3 OPEN
+      3 Ne
+      3 Name
+      3 NE
+      3 Mod
+      3 MOD
+      3 Lor
+      3 Le
+      3 LT
+      3 LEA
+      3 LE
+      3 JSR
+      3 Idsz
+      3 Hash
+      3 Gt
+      3 Glo
+      3 Ge
+      3 GT
+      3 GE
+      3 Fun
+      3 ENT
+      3 Div
+      3 Brak
+      3 BNZ
+      3 AND
+      3 5
+      3 3
+      3 /
+      3 **
+      2 ~
+      2 z
+      2 read
+      2 open
+      2 memcmp
+      2 lev
+      2 close
+      2 _
+      2 ^
+      2 Z
+      2 Sizeof
+      2 Return
+      2 READ
+      2 PRTF
+      2 MSET
+      2 MCMP
+      2 MALC
+      2 If
+      2 FREE
+      2 Enum
+      2 Else
+      2 CLOS
+      2 <<
+      2 6
+      2 %
+      1 x
+      1 s
+      1 main
+      1 free
+      1 f
+      1 X
+      1 F
+      1 >>
+      1 8
+      1 7
+      1 4
+      1 256
+      1 16
+      1 15
+      1 147
+      1 128
+      1 1024
+      1 10
+
+
+ 6. Memory Usage Patterns
+- Stack Usage:  
+  - Function calls use stack memory heavily (recursive calls in `expr()` and `stmt()`).  
+  - Deeply nested functions (max depth 7) may increase stack frame size.  
+- Heap Usage:  
+  - Dynamic memory allocation is minimal.  
+  - Heap allocation occurs in:
+    - `malloc()` calls (for symbol table, data storage).
+    - `free()` is used but not extensively.  
+  - Potential Memory Leak Risks:
+    - Unused pointers are not always freed before program exit.  
